@@ -736,6 +736,7 @@ contains
     integer :: k            ! loop index for scoring bins
     integer :: n            ! loop index for nuclides
     integer :: l            ! loop index for user scores
+    integer :: z            ! counter for zernike polynomials
     integer :: type         ! type of tally filter
     integer :: indent       ! number of spaces to preceed output
     integer :: filter_index ! index in results array for filters
@@ -792,7 +793,8 @@ contains
     score_names(abs(SCORE_NU_SCATTER_YN))      = "Scattering Prod. Rate Moment"
     score_names(abs(SCORE_DELAYED_NU_FISSION)) = "Delayed-Nu-Fission Rate"
     score_names(abs(SCORE_INVERSE_VELOCITY))   = "Flux-Weighted Inverse Velocity"
-
+    score_names(abs(SCORE_KAPPA_FISSION_ZN))   = "Kappa-Fission Rate Zernike Expansion"
+    
     ! Create filename for tally output
     filename = trim(path_output) // "tallies.out"
 
@@ -960,6 +962,25 @@ contains
                 end do
               end do
               k = k + (t % moment_order(k) + 1)**2 - 1
+            case (SCORE_KAPPA_FISSION_ZN)
+              z = 0;
+              score_index = score_index - 1
+              do n_order = 0, t % moment_order(k)
+                z = z + n_order + 1
+                do nm_order = -n_order, n_order
+                  if ( MOD(n_order - nm_order,2) .NE. 0) then
+                     cycle
+                  endif
+                  score_index = score_index + 1
+                  score_name = 'Z' // trim(to_str(n_order)) // ',' // &
+                       trim(to_str(nm_order)) // " " // score_names(abs(t % score_bins(k)))
+                  write(UNIT=UNIT_TALLY, FMT='(1X,2A,1X,A,"+/- ",A)') &
+                    repeat(" ", indent), score_name, &
+                    to_str(t % results(score_index,filter_index) % sum), &
+                    trim(to_str(t % results(score_index,filter_index) % sum_sq))
+                end do
+              end do
+              k = k + z
             case default
               if (t % score_bins(k) > 0) then
                 score_name = reaction_name(t % score_bins(k))

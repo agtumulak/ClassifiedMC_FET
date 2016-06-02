@@ -749,6 +749,14 @@ contains
               k = k + 1
             end do
           end do
+        case (SCORE_KAPPA_FISSION_ZN)
+          do n_order = 0, t % moment_order(k)
+            do nm_order = -n_order, n_order, 2
+              str_array(k) = 'Z' // trim(to_str(n_order)) // ',' // &
+                  trim(to_str(nm_order))
+              k = k + 1
+            enddo
+          enddo 
         case default
           str_array(k) = ''
           k = k + 1

@@ -279,7 +279,7 @@ module constants
        EVENT_ABSORB  =  2
 
   ! Tally score type
-  integer, parameter :: N_SCORE_TYPES = 20
+  integer, parameter :: N_SCORE_TYPES = 21
   integer, parameter :: &
        SCORE_FLUX               = -1,  & ! flux
        SCORE_TOTAL              = -2,  & ! total reaction rate
@@ -300,25 +300,30 @@ module constants
        SCORE_NU_SCATTER_YN      = -17, & ! angular flux-weighted nu-scattering moment (0:N)
        SCORE_EVENTS             = -18, & ! number of events
        SCORE_DELAYED_NU_FISSION = -19, & ! delayed neutron production rate
-       SCORE_INVERSE_VELOCITY   = -20    ! flux-weighted inverse velocity
-
+       SCORE_INVERSE_VELOCITY   = -20, & ! flux-weighted inverse velocity
+       SCORE_KAPPA_FISSION_ZN   = -21    ! Zernike poly expansion for kappa fission
+       
   ! Maximum scattering order supported
-  integer, parameter :: MAX_ANG_ORDER = 10
+  integer, parameter :: MAX_ANG_ORDER = 18
 
   ! Names of *-PN & *-YN scores (MOMENT_STRS) and *-N moment scores
   character(*), parameter :: &
-       MOMENT_STRS(6)    = (/ "scatter-p   ",   &
-                              "nu-scatter-p",   &
-                              "flux-y      ",   &
-                              "total-y     ",   &
-                              "scatter-y   ",   &
-                              "nu-scatter-y"/), &
+       MOMENT_STRS(7)    = (/ "scatter-p      ",   &
+                              "nu-scatter-p   ",   &
+                              "flux-y         ",   &
+                              "total-y        ",   &
+                              "scatter-y      ",   &
+                              "nu-scatter-y   ",   &
+                              "kappa-fission-z"/), &
        MOMENT_N_STRS(2)  = (/ "scatter-    ",   &
                               "nu-scatter- "/)
 
   ! Location in MOMENT_STRS where the YN data begins
   integer, parameter :: YN_LOC = 3
-
+  
+  ! Location in MOMENT_STRS where Zernike
+  integer, parameter :: ZN_LOC = 7
+  
   ! Tally map bin finding
   integer, parameter :: NO_BIN_FOUND = -1
 
